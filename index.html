@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ExWi Investment Company</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #00c853, #ff9100);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #00695c;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .account-details {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f1f8e9;
+      border-radius: 10px;
+    }
+
+    .copy-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .copy-btn {
+      padding: 5px 10px;
+      border: none;
+      background-color: #00c853;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background-color: #007e33;
+    }
+
+    button {
+      margin-top: 30px;
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(to right, #00c853, #ff9100);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ExWi Investment Company</h1>
+    <form id="investForm">
+      <label for="plan">Choose a Plan:</label>
+      <select id="plan" name="plan" required>
+        <option value="">Select Plan</option>
+        <option value="₦10,000">₦10,000 Plan</option>
+        <option value="₦20,000">₦20,000 Plan</option>
+        <option value="₦50,000">₦50,000 Plan</option>
+      </select>
+
+      <label for="method">Choose Payment Method:</label>
+      <select id="method" name="method" required>
+        <option value="">Select Method</option>
+        <option value="Palmpay">Palmpay</option>
+        <option value="Opay">Opay</option>
+        <option value="Moniepoint">Moniepoint</option>
+        <option value="Transfer">Bank Transfer</option>
+      </select>
+
+      <div class="account-details">
+        <p><strong>Bank:</strong> GT Bank</p>
+        <p><strong>Account Name:</strong> Excellent</p>
+        <div class="copy-wrap">
+          <p><strong>Account Number:</strong> <span id="accNum">11111111111</span></p>
+          <button type="button" class="copy-btn" onclick="copyAccountNumber()">Copy</button>
+        </div>
+      </div>
+
+      <button type="submit">Invest</button>
+    </form>
+  </div>
+
+  <script>
+    const methodSelect = document.getElementById("method");
+
+    function copyAccountNumber() {
+      const accNum = document.getElementById("accNum").innerText;
+      navigator.clipboard.writeText(accNum).then(() => {
+        alert("Account number copied to clipboard!");
+      });
+    }
+
+    function redirectToApp(method) {
+      let scheme, fallback;
+
+      switch (method) {
+        case "Palmpay":
+          scheme = "palmpay://";
+          fallback = "https://play.google.com/store/apps/details?id=com.transsnet.payment";
+          break;
+        case "Opay":
+          scheme = "opay://";
+          fallback = "https://play.google.com/store/apps/details?id=team.opay.pay";
+          break;
+        case "Moniepoint":
+          scheme = "moniepoint://";
+          fallback = "https://play.google.com/store/apps/details?id=com.moniepoint.mobilebanking";
+          break;
+        default:
+          return;
+      }
+
+      // Auto copy
+      copyAccountNumber();
+
+      // Try to open app
+      const now = Date.now();
+      setTimeout(() => {
+        if (Date.now() - now < 2000) {
+          window.location.href = fallback;
+        }
+      }, 1000);
+      window.location.href = scheme;
+    }
+
+    methodSelect.addEventListener("change", () => {
+      const method = methodSelect.value;
+      if (method === "Palmpay" || method === "Opay" || method === "Moniepoint") {
+        redirectToApp(method);
+      }
+    });
+
+    document.getElementById("investForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const plan = document.getElementById("plan").value;
+      const method = methodSelect.value;
+
+      if (!plan || !method) {
+        alert("Please select both a plan and a payment method.");
+        return;
+      }
+
+      alert("If you are done with the payment, please contact the Manager immediately.\n\nThank you for choosing ExWi Investment Company!");
+      this.reset();
+    });
+  </script>
+</body>
+</html>
